@@ -28,11 +28,11 @@ type PassengerWithInfo struct {
 
 // PassengerFilter используется для фильтрации пассажиров по различным признакам.
 type PassengerFilter struct {
-	RouteID    *int    // ID маршрута
-	Sex        *string // Пол пассажира
-	MinAge     *int    // Минимальный возраст
-	MaxAge     *int    // Максимальный возраст
-	HasLuggage *bool   // Признак наличия багажа
-	Abroad     *bool   // Поездка за границу
-	TravelDate *string // Дата поездки
+	RouteID    *int    `form:"routeID"`
+	Sex        *string `form:"sex"`
+	MinAge     *int    `form:"minAge"`
+	MaxAge     *int    `form:"maxAge"`
+	HasLuggage *bool   `form:"hasLuggage"`
+	Abroad     *bool   `form:"abroad"`
+	TravelDate *string `form:"travelDate"`
 }

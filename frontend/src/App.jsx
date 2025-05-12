@@ -4,37 +4,40 @@ import './App.css';
 import Tabs from './components/Tabs.jsx';
 import BrigadeEmployees from './components/BrigadeEmployees';
 import PassengerList from './components/PassengerList.jsx';
+import TicketInfo from './components/TicketInfo.jsx';
 
 function App() {
-  const [activeTab, setActiveTab] = useState('employees'); // Состояние для активной вкладки
+  const [activeTab, setActiveTab] = useState('employees');
 
-  // Вкладки
+  // Добавляем все нужные вкладки
   const tabs = [
     { id: 'employees', label: 'Сотрудники' },
-    { id: 'other', label: 'Данные 2' }, // Дополнительная вкладка для примера
+    { id: 'passengers', label: 'Пассажиры' },
+    { id: 'tickets', label: 'Билеты' },
   ];
 
-  // Функция для изменения активной вкладки
-  const handleTabChange = (tabId) => {
-    setActiveTab(tabId);
-  };
-
   return (
-    <>
-      <div>
-        <h2>Железнодорожная станция</h2>
+    <div>
+      <h2>Железнодорожная станция</h2>
 
-        {/* Вкладки */}
-        <div className="tabs">
-          <button onClick={() => setActiveTab('employees')}>Сотрудники</button>
-          <button onClick={() => setActiveTab('passengers')}>Пассажиры</button>
-        </div>
-
-        {/* Вывод активной вкладки */}
-        {activeTab === 'employees' && <BrigadeEmployees />}
-        {activeTab === 'passengers' && <PassengerList />}
+      {/* Отображение вкладок */}
+      <div className="tabs">
+        {tabs.map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={activeTab === tab.id ? 'active' : ''}
+          >
+            {tab.label}
+          </button>
+        ))}
       </div>
-    </>
+
+      {/* Отображение содержимого активной вкладки */}
+      {activeTab === 'employees' && <BrigadeEmployees />}
+      {activeTab === 'passengers' && <PassengerList />}
+      {activeTab === 'tickets' && <TicketInfo />}
+    </div>
   );
 }
 

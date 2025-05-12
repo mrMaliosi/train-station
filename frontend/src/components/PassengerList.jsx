@@ -13,6 +13,15 @@ const PassengerList = () => {
     hasLuggage: '',
   });
 
+  // Функция для обновления значений фильтров
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilter((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
   useEffect(() => {
     // Функция для получения списка пассажиров с фильтрами
     const fetchPassengers = async () => {
@@ -38,19 +47,22 @@ const PassengerList = () => {
         <label>Route ID:</label>
         <input
           type="text"
+          name="routeID"
           value={filter.routeID}
-          onChange={(e) => setFilter({ ...filter, routeID: e.target.value })}
+          onChange={handleFilterChange}
         />
         <label>Дата поездки:</label>
         <input
           type="date"
+          name="travelDate"
           value={filter.travelDate}
-          onChange={(e) => setFilter({ ...filter, travelDate: e.target.value })}
+          onChange={handleFilterChange}
         />
         <label>Пол:</label>
         <select
+          name="sex"
           value={filter.sex}
-          onChange={(e) => setFilter({ ...filter, sex: e.target.value })}
+          onChange={handleFilterChange}
         >
           <option value="">Все</option>
           <option value="M">Мужской</option>
@@ -59,19 +71,22 @@ const PassengerList = () => {
         <label>Минимальный возраст:</label>
         <input
           type="number"
+          name="minAge"
           value={filter.minAge}
-          onChange={(e) => setFilter({ ...filter, minAge: e.target.value })}
+          onChange={handleFilterChange}
         />
         <label>Максимальный возраст:</label>
         <input
           type="number"
+          name="maxAge"
           value={filter.maxAge}
-          onChange={(e) => setFilter({ ...filter, maxAge: e.target.value })}
+          onChange={handleFilterChange}
         />
         <label>Наличие багажа:</label>
         <select
+          name="hasLuggage"
           value={filter.hasLuggage}
-          onChange={(e) => setFilter({ ...filter, hasLuggage: e.target.value })}
+          onChange={handleFilterChange}
         >
           <option value="">Не важно</option>
           <option value="true">Есть</option>
@@ -80,7 +95,7 @@ const PassengerList = () => {
       </div>
 
       {/* Таблица пассажиров */}
-      <table>
+      <table className="employees-table">
         <thead>
           <tr>
             <th>Имя</th>
@@ -98,7 +113,7 @@ const PassengerList = () => {
               <td>{passenger.sex}</td>
               <td>{passenger.age}</td>
               <td>{passenger.route_id}</td>
-              <td>{passenger.travel_date}</td>
+              <td>{new Date(passenger.travel_date).toLocaleDateString()}</td>
               <td>{passenger.has_luggage ? 'Да' : 'Нет'}</td>
             </tr>
           ))}

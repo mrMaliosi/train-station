@@ -1,17 +1,23 @@
 package models
 
+import (
+	"database/sql"
+)
+
+// Ticket представляет информацию о билете.
 type Ticket struct {
-	TicketID     int     `db:"ticket_id" json:"ticket_id"`
-	RouteID      int     `db:"route_id" json:"route_id"`
-	TicketStatus string  `db:"ticket_status" json:"ticket_status"`
-	PassengerID  int     `db:"passenger_id" json:"passenger_id"`
-	BoughtAt     *string `db:"bought_at" json:"bought_at,omitempty"`
-	Price        float64 `db:"price" json:"price"`
+	TicketID     int          `db:"ticket_id"`
+	RouteID      int          `db:"route_id"`
+	TicketStatus string       `db:"ticket_status"`
+	PassengerID  int          `db:"passenger_id"`
+	BoughtAt     sql.NullTime `db:"bought_at"`
+	Price        float64      `db:"price"`
+	TrainNumber  string       `db:"train_number"` // Добавлено поле для номера поезда
 }
 
 type TicketFilter struct {
-	RouteID  *int
-	Date     *string
-	FromDate *string
-	ToDate   *string
+	RouteID  *int    `form:"routeID"`
+	FromDate *string `form:"fromDate"`
+	ToDate   *string `form:"toDate"`
+	Status   *string `form:"status"`
 }

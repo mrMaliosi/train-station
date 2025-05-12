@@ -51,3 +51,16 @@ func ParseTime(c *gin.Context, queryParam string) *time.Time {
 	}
 	return &parsedDate
 }
+
+// BoolPtr извлекает параметр запроса и возвращает *bool (nil, если параметр не передан или невалиден)
+func BoolPtr(s string) *bool {
+	if s == "" {
+		return nil
+	}
+	v, err := strconv.ParseBool(s)
+	if err != nil {
+		log.Printf("Invalid bool format: %s, error: %v", s, err)
+		return nil
+	}
+	return &v
+}

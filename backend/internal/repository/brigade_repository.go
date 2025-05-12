@@ -38,6 +38,7 @@ func (r *brigadeRepository) GetEmployees(ctx context.Context, filter models.Brig
 			e.sex, 
 			e.position_id, 
 			e.salary,
+			b.brigade_id,
 			p.position_name AS position_name, 
 			EXTRACT(YEAR FROM age(current_date, e.hired_at)) AS experience
 		FROM "Brigades" AS b

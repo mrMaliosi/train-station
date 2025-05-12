@@ -85,10 +85,12 @@ func SetupRoutes(r *gin.Engine, db *sqlx.DB) {
 	// Маршруты для билетов
 	ticketGroup := r.Group("/tickets")
 	{
-		ticketGroup.GET("/sold", ticketHandler.GetSoldTickets)
+		ticketGroup.GET("", ticketHandler.GetTickets) // Обобщённый эндпоинт для получения билетов с фильтрами
 		ticketGroup.GET("/sold/count", ticketHandler.CountSoldTickets)
-		ticketGroup.GET("/unsold", ticketHandler.GetUnsoldTickets)
 		ticketGroup.GET("/returned/count", ticketHandler.CountReturnedTickets)
+		ticketGroup.GET("/statuses", ticketHandler.GetTicketStatuses) // Получение возможных статусов (ENUM)
+		ticketGroup.GET("/stats", ticketHandler.GetTicketStats)
+
 	}
 
 	// Маршруты для пассажиров

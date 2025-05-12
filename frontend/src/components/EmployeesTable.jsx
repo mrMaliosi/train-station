@@ -83,37 +83,37 @@ export default function EmployeesTable({ employees }) {
         </select>
         <input
           type="number"
-          name="minSalary"
+          name="salary_from"
           placeholder="Мин. зарплата"
-          value={filters.minSalary}
+          value={filters.salary_from}
           onChange={handleFilterChange}
         />
         <input
           type="number"
-          name="maxSalary"
+          name="salary_to"
           placeholder="Макс. зарплата"
-          value={filters.maxSalary}
+          value={filters.salary_to}
           onChange={handleFilterChange}
         />
         <input
           type="number"
-          name="teamID"
+          name="brigade_id"
           placeholder="Фильтр по ID бригады"
-          value={filters.teamID}
+          value={filters.brigade_id}
           onChange={handleFilterChange}
         />
         <input
           type="number"
-          name="minAge"
+          name="age_from"
           placeholder="Мин. возраст"
-          value={filters.minAge}
+          value={filters.age_from}
           onChange={handleFilterChange}
         />
         <input
           type="number"
-          name="maxAge"
+          name="age_to"
           placeholder="Макс. возраст"
-          value={filters.maxAge}
+          value={filters.age_to}
           onChange={handleFilterChange}
         />
       </div>
@@ -147,7 +147,7 @@ export default function EmployeesTable({ employees }) {
                 <td>{emp.PositionName}</td>
                 <td>{emp.Experience} лет</td>
                 <td>{emp.Salary} ₽</td>
-                <td>{emp.TeamID}</td> {/* Выводим ID бригады */}
+                <td>{emp.BrigadeID}</td> {/* Выводим ID бригады */}
                 <td>{calculateAge(emp.BirthDate.Time)} лет</td> {/* Выводим возраст */}
               </tr>
             ))
