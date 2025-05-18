@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import EmployeesTable from "./EmployeesTable";
+//import EmployeesTable from './styles/TableStyle.css';
 
+/*
 export default function EmployeesFilter() {
   const [filters, setFilters] = useState({
     gender: "",
@@ -46,3 +47,4 @@ export default function EmployeesFilter() {
     </div>
   );
 }
+*/

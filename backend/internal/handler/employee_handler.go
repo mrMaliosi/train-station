@@ -1,18 +1,16 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
-	"strconv"
-
-	"github.com/jmoiron/sqlx"
 
 	"github.com/gin-gonic/gin"
 	"github.com/mrMaliosi/train-station/backend/internal/models"
 	"github.com/mrMaliosi/train-station/backend/internal/repository"
+	"github.com/mrMaliosi/train-station/backend/internal/utilities"
 )
 
 type EmployeeHandler struct {
-	DB           *sqlx.DB
 	EmployeeRepo repository.EmployeeRepository
 }
 
@@ -38,39 +36,19 @@ type EmployeeHandler struct {
 func (h *EmployeeHandler) GetFilteredEmployees(c *gin.Context) {
 	var filter models.EmployeeFilter
 
-	// Helper: int query param (возвращает nil, если параметр не передан)
-	parseInt := func(key string) *int {
-		if val := c.DefaultQuery(key, ""); val != "" {
-			if v, err := strconv.Atoi(val); err == nil {
-				return &v
-			}
-		}
-		return nil
-	}
-
-	// Helper: float query param (возвращает nil, если параметр не передан)
-	parseFloat := func(key string) *float64 {
-		if val := c.DefaultQuery(key, ""); val != "" {
-			if v, err := strconv.ParseFloat(val, 64); err == nil {
-				return &v
-			}
-		}
-		return nil
-	}
-
 	// Чтение параметров
-	filter.DepartmentID = parseInt("department_id")
+	filter.DepartmentID = utilities.IntPtr(c, "department_id")
 	if sex := c.DefaultQuery("sex", ""); sex != "" {
 		filter.Sex = &sex
 	}
-	filter.AgeFrom = parseInt("age_from")
-	filter.AgeTo = parseInt("age_to")
-	filter.ExperienceFrom = parseInt("experience_from")
-	filter.ExperienceTo = parseInt("experience_to")
-	filter.ChildrenFrom = parseInt("child_from")
-	filter.ChildrenTo = parseInt("child_to")
-	filter.SalaryFrom = parseFloat("salary_from")
-	filter.SalaryTo = parseFloat("salary_to")
+	filter.AgeFrom = utilities.IntPtr(c, "age_from")
+	filter.AgeTo = utilities.IntPtr(c, "age_to")
+	filter.ExperienceFrom = utilities.IntPtr(c, "experience_from")
+	filter.ExperienceTo = utilities.IntPtr(c, "experience_to")
+	filter.ChildrenFrom = utilities.IntPtr(c, "children_from")
+	filter.ChildrenTo = utilities.IntPtr(c, "children_to")
+	filter.SalaryFrom = utilities.FloatPtr(c, "salary_from")
+	filter.SalaryTo = utilities.FloatPtr(c, "salary_to")
 
 	// Запрос в репозиторий для получения данных с фильтрацией
 	employees, err := h.EmployeeRepo.EmployeeFilter(c.Request.Context(), filter)
@@ -81,4 +59,22 @@ func (h *EmployeeHandler) GetFilteredEmployees(c *gin.Context) {
 
 	// Ответ с данными
 	c.JSON(http.StatusOK, employees)
+}
+
+func (h *EmployeeHandler) PostNewEmployee(c *gin.Context) {
+	var req models.EmployeeCreate
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		fmt.Println("Ошибка при парсинге JSON:", err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	employeeID, err := h.EmployeeRepo.EmployeeCreate(c.Request.Context(), req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, employeeID)
 }

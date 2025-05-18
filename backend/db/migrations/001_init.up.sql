@@ -41,7 +41,7 @@ CREATE TABLE "Departments" (
 );
 
 CREATE TABLE "Employees" (
-	"id" INTEGER NOT NULL,
+	"id" SERIAL NOT NULL,
 	"name" VARCHAR(255) NOT NULL,
 	"surname" VARCHAR(255) NOT NULL,
 	"patronymic" VARCHAR(255),
@@ -50,7 +50,7 @@ CREATE TABLE "Employees" (
 	"hired_at" DATE NOT NULL,
 	"sex" CHAR(1) NOT NULL CHECK(sex IN ('M', 'F')),
 	"position_id" INTEGER NOT NULL,
-	"salary" DECIMAL(16,2) NOT NULL,
+	"salary" NUMERIC(10,2) NOT NULL,
 	PRIMARY KEY("id")
 );
 

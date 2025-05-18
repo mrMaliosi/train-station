@@ -1,6 +1,9 @@
 package routes
 
 import (
+	"time"
+
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
 	"github.com/mrMaliosi/train-station/backend/internal/handler"
@@ -8,6 +11,16 @@ import (
 )
 
 func SetupRoutes(r *gin.Engine, db *sqlx.DB) {
+	r.Use(cors.New(cors.Config{
+		AllowOriginFunc: func(origin string) bool {
+			return origin == "http://localhost:5173" || origin == "http://127.0.0.1:5173"
+		},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
+
 	// Инициализация репозиториев
 	brigadeRepo := repository.NewBrigadeRepository(db)
 	employeeRepo := repository.NewEmployeeRepository(db)
@@ -17,6 +30,8 @@ func SetupRoutes(r *gin.Engine, db *sqlx.DB) {
 	routeRepo := repository.NewRouteRepository(db)
 	ticketRepo := repository.NewTicketRepository(db)
 	passengerRepo := repository.NewPassengerRepository(db)
+	departmentRepo := repository.NewDepartmentRepository(db)
+	positionRepo := repository.NewPositionRepository(db)
 
 	// Инициализация хендлеров
 	brigadeHandler := handler.BrigadeHandler{
@@ -24,7 +39,6 @@ func SetupRoutes(r *gin.Engine, db *sqlx.DB) {
 		BrigadeRepo: brigadeRepo,
 	}
 	employeeHandler := handler.EmployeeHandler{
-		DB:           db,
 		EmployeeRepo: employeeRepo,
 	}
 	driverHandler := handler.LocomotiveDriverHandler{
@@ -42,8 +56,14 @@ func SetupRoutes(r *gin.Engine, db *sqlx.DB) {
 	ticketHandler := handler.TicketHandler{
 		TicketRepo: ticketRepo,
 	}
-	passengerHandler := handler.PassengerHandler{ // Добавлен хэндлер для пассажиров
+	passengerHandler := handler.PassengerHandler{
 		PassengerRepo: passengerRepo,
+	}
+	departmentHandler := handler.DepartmentHandler{
+		DepartmentRepo: departmentRepo,
+	}
+	positionHandler := handler.PositionHandler{
+		PositionRepo: positionRepo,
 	}
 
 	// Маршруты для бригад
@@ -57,6 +77,7 @@ func SetupRoutes(r *gin.Engine, db *sqlx.DB) {
 	employeeGroup := r.Group("/employees")
 	{
 		employeeGroup.GET("", employeeHandler.GetFilteredEmployees)
+		employeeGroup.POST("", employeeHandler.PostNewEmployee)
 		employeeGroup.GET("/locomotive-drivers", driverHandler.GetLocomotiveDrivers)
 	}
 
@@ -96,6 +117,18 @@ func SetupRoutes(r *gin.Engine, db *sqlx.DB) {
 	// Маршруты для пассажиров
 	passengerGroup := r.Group("/passengers")
 	{
-		passengerGroup.GET("/filter", passengerHandler.GetFilteredPassengers) // Добавлен новый маршрут для фильтрации пассажиров
+		passengerGroup.GET("/filter", passengerHandler.GetFilteredPassengers)
+	}
+
+	// Маршруты для департаментов
+	departmentGroup := r.Group("/departments")
+	{
+		departmentGroup.GET("", departmentHandler.GetDepartments)
+	}
+
+	// Маршруты для позиций
+	positionGroup := r.Group("/positions")
+	{
+		positionGroup.GET("", positionHandler.GetPositions)
 	}
 }

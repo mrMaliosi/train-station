@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    /* Цель компиляции */
+    "target": "ES6",                          /* Достаточно ES6, современные сборщики умеют дальше транспилировать под старые */
+    "module": "ESNext",                       /* Используем ESM для tree-shaking и современных бандлеров */
+
+    /* JSX */
+    "jsx": "react-jsx",                       /* Автоматический импорт JSX (React 17+) */
+
+    /* Библиотеки окружения */
+    "lib": ["DOM", "DOM.Iterable", "ESNext"], /* Описание API браузера + последних возможностей JS */
+
+    /* Разрешения модулей */
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,                  /* Нужно для совместимости с Babel или SWC */
+
+    /* Вывод */
+    "noEmit": true,                           /* Отменяем вывод — сборщик (webpack, Vite) сам решит, что и куда писать */
+
+    /* Интероп с CommonJS */
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+
+    /* Строгий режим и проверка типов */
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true                      /* Пропускаем типизацию деклараций в node_modules */
+  },
+  "include": ["src", "vite-env.d.ts"],                         /* Где лежит ваш код */
+  "exclude": ["node_modules", "dist"]         /* По умолчанию, но можно явно прописать */
+}
