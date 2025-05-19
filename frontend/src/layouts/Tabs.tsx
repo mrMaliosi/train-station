@@ -2,7 +2,7 @@
 import * as RadixTabs from '@radix-ui/react-tabs';
 import type { ReactNode } from 'react';
 
-export type TabId = 'employees' | 'passengers' | 'tickets';
+export type TabId = 'employees' | 'passengers' | 'tickets' | 'departments';
 export interface Tab {
   id: TabId;
   label: string;

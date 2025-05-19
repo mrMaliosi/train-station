@@ -125,6 +125,7 @@ func SetupRoutes(r *gin.Engine, db *sqlx.DB) {
 	departmentGroup := r.Group("/departments")
 	{
 		departmentGroup.GET("", departmentHandler.GetDepartments)
+		departmentGroup.GET("/info", departmentHandler.GetDepartmentsInfo)
 	}
 
 	// Маршруты для позиций

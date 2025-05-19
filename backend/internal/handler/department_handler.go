@@ -22,3 +22,15 @@ func (h *DepartmentHandler) GetDepartments(c *gin.Context) {
 	// Ответ с данными
 	c.JSON(http.StatusOK, departments)
 }
+
+func (h *DepartmentHandler) GetDepartmentsInfo(c *gin.Context) {
+	// Запрос в репозиторий для получения данных с фильтрацией
+	departments, err := h.DepartmentRepo.DepartmentsInfo(c.Request.Context())
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Ответ с данными
+	c.JSON(http.StatusOK, departments)
+}

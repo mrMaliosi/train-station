@@ -3,6 +3,7 @@ package handler
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/mrMaliosi/train-station/backend/internal/models"
@@ -80,15 +81,20 @@ func (h *EmployeeHandler) PostNewEmployee(c *gin.Context) {
 }
 
 func (h *EmployeeHandler) DeleteEmployee(c *gin.Context) {
-	tableID := utilities.IntPtr(c, "id")
+	idParam := c.Param("id")
+	id, err := strconv.ParseInt(idParam, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
+		return
+	}
 
-	// Запрос в репозиторий для получения данных с фильтрацией
-	err := h.EmployeeRepo.EmployeeDelete(c.Request.Context(), *tableID)
+	// Удаление сотрудника через репозиторий
+	err = h.EmployeeRepo.EmployeeDelete(c.Request.Context(), id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	// Ответ с данными
-	c.JSON(http.StatusOK, 0)
+	// Успешный ответ
+	c.JSON(http.StatusOK, gin.H{"status": "deleted"})
 }
