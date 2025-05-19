@@ -13,6 +13,7 @@ import (
 type EmployeeRepository interface {
 	EmployeeFilter(ctx context.Context, f models.EmployeeFilter) ([]models.Employee, error)
 	EmployeeCreate(ctx context.Context, f models.EmployeeCreate) (int, error)
+	EmployeeDelete(ctx context.Context, id int) error
 }
 
 // Реализация репозитория сотрудников
@@ -141,4 +142,9 @@ func (r *employeeRepository) EmployeeCreate(ctx context.Context, req models.Empl
 	}
 
 	return employeeID, nil
+}
+
+func (r *employeeRepository) EmployeeDelete(ctx context.Context, id int) error {
+	_, err := r.db.ExecContext(ctx, "DELETE FROM employees WHERE id = $1", id)
+	return err
 }

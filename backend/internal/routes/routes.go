@@ -78,6 +78,7 @@ func SetupRoutes(r *gin.Engine, db *sqlx.DB) {
 	{
 		employeeGroup.GET("", employeeHandler.GetFilteredEmployees)
 		employeeGroup.POST("", employeeHandler.PostNewEmployee)
+		employeeGroup.DELETE("/:id", employeeHandler.DeleteEmployee)
 		employeeGroup.GET("/locomotive-drivers", driverHandler.GetLocomotiveDrivers)
 	}
 

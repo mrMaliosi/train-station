@@ -78,3 +78,17 @@ func (h *EmployeeHandler) PostNewEmployee(c *gin.Context) {
 
 	c.JSON(http.StatusOK, employeeID)
 }
+
+func (h *EmployeeHandler) DeleteEmployee(c *gin.Context) {
+	tableID := utilities.IntPtr(c, "id")
+
+	// Запрос в репозиторий для получения данных с фильтрацией
+	err := h.EmployeeRepo.EmployeeDelete(c.Request.Context(), *tableID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Ответ с данными
+	c.JSON(http.StatusOK, 0)
+}

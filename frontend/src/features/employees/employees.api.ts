@@ -1,4 +1,3 @@
-// employees.api.ts
 import type { Employee, EmployeeCreate } from './employees.types';
 import type { AxiosResponse } from 'axios';
 import api from '../../api';
@@ -17,13 +16,21 @@ export interface EmployeeFilters {
   maxSalary?: number;
 }
 
-// Новая функция добавления сотрудника
+// Добавление сотрудника
 export async function addEmployee(employee: EmployeeCreate): Promise<Employee> {
   const response = await api.post('/employees', employee);
   return response.data;
 }
 
+// Обновление сотрудника
+export async function updateEmployee(employee: Employee): Promise<void> {
+  await api.put(`/employees/${employee.ID}`, employee);
+}
 
+// Удаление сотрудника
+export async function deleteEmployee(id: number): Promise<void> {
+  await api.delete(`/employees/${id}`);
+}
 
 export async function getFilteredEmployees(
   filters: EmployeeFilters
@@ -40,7 +47,6 @@ export async function getFilteredEmployees(
   if (filters.minSalary)      params.salary_from      = filters.minSalary;
   if (filters.maxSalary)      params.salary_to        = filters.maxSalary;
 
-  console.log('API params:', params);
   const response: AxiosResponse<any> = await api.get('/employees', { params });
   const rawSource = response.data ?? [];
   const raw = Array.isArray(rawSource)

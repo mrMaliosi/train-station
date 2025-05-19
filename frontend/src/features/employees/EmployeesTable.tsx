@@ -1,5 +1,4 @@
-// EmployeesTable.tsx
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import type { Employee, EmployeeFilterForm } from './employees.types';
 import { calculateAge, getExperienceYears } from '../../utils/date';
 import { getSexLabel } from '../../utils/data';
@@ -9,10 +8,12 @@ interface Props {
   employees: Employee[];
   departments: { id: number; name: string }[];
   onFilterChange: (apiFilters: any) => void;
+  onEdit: (employee: Employee) => void;
+  onDelete: (id: number) => void;
 }
 
-export default function EmployeesTable({ employees, departments, onFilterChange }: Props) {
-  const [form, setForm] = useState<EmployeeFilterForm>({
+export default function EmployeesTable({ employees, departments, onFilterChange, onEdit, onDelete }: Props) {
+  const [form, setForm] = React.useState<EmployeeFilterForm>({
     departmentID: '', sex: '', ageFrom: '', ageTo: '',
     experienceFrom: '', experienceTo: '', childrenFrom: '', childrenTo: '',
     minSalary: '', maxSalary: '',
@@ -22,24 +23,8 @@ export default function EmployeesTable({ employees, departments, onFilterChange 
     const { name, value } = e.target as any;
     setForm(f => ({ ...f, [name]: value }));
   };
-   const handleEdit = (id: number) => {
-    console.log('Редактировать сотрудника с ID:', id);
-    // TODO: Открыть форму редактирования
-  };
 
-  const handleDelete = async (id: number) => {
-    if (!window.confirm('Удалить этого сотрудника?')) return;
-    try {
-      //await api.delete(`/employees/${id}`);
-      alert('Сотрудник удалён');
-      onFilterChange({ ...form }); // повторный вызов фильтрации
-    } catch (err) {
-      alert('Ошибка при удалении');
-      console.error(err);
-    }
-  };
-
-  useEffect(() => {
+  React.useEffect(() => {
     const api: any = {};
     if (form.departmentID)    api.departmentID    = +form.departmentID;
     if (form.sex)             api.sex             = form.sex;
@@ -76,7 +61,7 @@ export default function EmployeesTable({ employees, departments, onFilterChange 
         <input name="maxSalary" placeholder="Макс. зарплата" value={form.maxSalary} onChange={handleChange} />
       </div>
 
-            <table className="employees-table">
+      <table className="employees-table">
         <thead>
           <tr>
             <th>#</th>
@@ -88,7 +73,7 @@ export default function EmployeesTable({ employees, departments, onFilterChange 
             <th>Зарплата</th>
             <th>Возраст</th>
             <th>Дети</th>
-            <th>Действия</th> {/* Новый столбец */}
+            <th>Действия</th>
           </tr>
         </thead>
         <tbody>
@@ -104,14 +89,13 @@ export default function EmployeesTable({ employees, departments, onFilterChange 
               <td>{calculateAge(emp.BirthDate.Time)}</td>
               <td>{emp.ChildNumber ?? 0}</td>
               <td>
-                <button onClick={() => handleEdit(emp.ID)}>Изменить</button>
-                <button onClick={() => handleDelete(emp.ID)}>Удалить</button>
+                <button onClick={() => onEdit(emp)}>Ред.</button>
+                <button onClick={() => onDelete(emp.ID)}>Удалить</button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-
     </div>
   );
 }
